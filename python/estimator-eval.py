@@ -1,10 +1,11 @@
 #!/usr/bin/python
-import sys
-import random
 import math
-import operator
-from sklearn.metrics import roc_auc_score
+import random
+import sys
+
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import roc_auc_score
+
 
 def ints(s):
     res = []
@@ -12,8 +13,10 @@ def ints(s):
         res.append(int(ss))
     return res
 
+
 def sigmoid(p):
     return 1.0 / (1.0 + math.exp(-p))
+
 
 def estimator_lr(feats):
     pred = 0.0
@@ -22,6 +25,7 @@ def estimator_lr(feats):
             pred += featWeight[feat]
     pred = sigmoid(pred)
     return pred
+
 
 random.seed(10)
 
@@ -32,7 +36,7 @@ if len(sys.argv) < 3:
 y = []
 yp = []
 featWeight = {}
-#initialize the lr
+# initialize the lr
 
 fi = open(sys.argv[2], 'r')
 for line in fi:
@@ -47,7 +51,7 @@ for line in fi:
     data = ints(line.strip().replace(":1", "").split())
     clk = data[0]
     mp = data[1]
-    fsid = 2 # feature start id
+    fsid = 2  # feature start id
     feats = data[fsid:]
     pred = estimator_lr(feats)
     y.append(clk)
@@ -59,4 +63,3 @@ auc = roc_auc_score(y, yp)
 rmse = math.sqrt(mean_squared_error(y, yp))
 print("algo\tauc\trmse")
 print("lr" + '\t' + str(auc) + '\t' + str(rmse))
-

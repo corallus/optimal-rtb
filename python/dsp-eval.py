@@ -1,29 +1,35 @@
 #!/usr/bin/python
-import sys
 import random
+import sys
 
 random.seed(10)
+
 
 def const(bid):
     return bid
 
+
 def rand(upper):
     return int(random.random() * upper)
+
 
 def mcpc(ecpc, pctr):
     return int(ecpc * pctr)
 
+
 def lin(pctr, basectr, basebid):
-    return int(pctr *  basebid / basectr)
+    return int(pctr * basebid / basectr)
+
 
 def win(ccfme, bid):
     return bid >= ccfme[2] and bid > ccfme[3]
+
 
 if len(sys.argv) < 6:
     print('Usage: train.log.txt test.log.txt test.lr.txt.pred test.gbrt.txt.pred rtb-result.txt')
     exit(-1)
 
-ccfm = [] # clk cnv floor market
+ccfm = []  # clk cnv floor market
 lrpctrs = []
 gbrtpctrs = []
 totalcost = 0
@@ -61,7 +67,7 @@ for line in fi:
     floorprice = int(s[20])
     marketprice = int(s[23])
     ccfm.append((clk, cnv, floorprice, marketprice))
-    totalcost+= marketprice
+    totalcost += marketprice
 fi.close()
 
 # read in lr pctr
@@ -78,11 +84,16 @@ fi.close()
 
 # rock!
 budgetProportions = [32, 8, 2]
-constParas = range(2, 20, 2) + range(20, 100, 5) + range(100, 301, 10)  #[2, 4, 6, 8, 10, 20, 30, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
-randParas = range(2, 20, 2) + range(20, 100, 5) + range(100, 501, 10)  #[5, 10, 20, 30, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 350, 400, 450, 500]
+constParas = range(2, 20, 2) + range(20, 100, 5) + range(100, 301,
+                                                         10)  # [2, 4, 6, 8, 10, 20, 30, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
+randParas = range(2, 20, 2) + range(20, 100, 5) + range(100, 501,
+                                                        10)  # [5, 10, 20, 30, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 350, 400, 450, 500]
 mcpcParas = [1]
-linParas = range(2, 20, 2) + range(20, 200, 5) + range(200, 300, 10) + range(300, 501, 25) # [10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 220, 250, 270, 300, 350, 400, 450, 500]
-algoParas = {"const":constParas, "rand":randParas, "mcpc-lr":mcpcParas, "mcpc-gbrt":mcpcParas, "lin-lr":linParas, "lin-gbrt":linParas}
+linParas = range(2, 20, 2) + range(20, 200, 5) + range(200, 300, 10) + range(300, 501,
+                                                                             25)  # [10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 220, 250, 270, 300, 350, 400, 450, 500]
+algoParas = {"const": constParas, "rand": randParas, "mcpc-lr": mcpcParas, "mcpc-gbrt": mcpcParas, "lin-lr": linParas,
+             "lin-gbrt": linParas}
+
 
 # output format
 # budgetProportion clk cnv bid imp budget spend para
@@ -124,7 +135,8 @@ def simulateABiddingStategyWithParameter(cases, tcost, proportion, algo, para):
         if cost > budget:
             break
     return str(proportion) + '\t' + str(clks) + '\t' + str(cnvs) + '\t' + str(bids) + '\t' + \
-            str(imps) + '\t' + str(budget) + '\t' + str(cost) + '\t' + algo + '\t'+ str(para)
+           str(imps) + '\t' + str(budget) + '\t' + str(cost) + '\t' + algo + '\t' + str(para)
+
 
 def simulateABiddingStrategy(cases, tcost, proportion, algo, writer):
     paras = algoParas[algo]
@@ -132,6 +144,7 @@ def simulateABiddingStrategy(cases, tcost, proportion, algo, writer):
         res = simulateABiddingStategyWithParameter(cases, tcost, proportion, algo, para)
         print(res)
         writer.write(res + '\n')
+
 
 fo = open(sys.argv[5], 'w')
 header = "prop\tclk\tcnv\tbid\timp\tbudget\tspend\talgo\tpara"

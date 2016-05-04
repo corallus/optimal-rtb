@@ -1,7 +1,5 @@
 #!/usr/bin/python
 import sys
-import random
-
 
 if len(sys.argv) < 2:
     print('Usage: python check-best-perf.py rtb.result.1458.txt')
@@ -12,7 +10,7 @@ setting_perf = {}
 
 # setting is (proportion, algorithm)
 
-fi = open(sys.argv[1], 'r') # rtb.result.1458.txt
+fi = open(sys.argv[1], 'r')  # rtb.result.1458.txt
 fo = open(sys.argv[1].replace('.tsv', '.best.perf.tsv'), 'w')
 first = True
 for line in fi:

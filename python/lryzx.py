@@ -1,11 +1,11 @@
 #!/usr/bin/python
-import sys
-import random
 import math
 import operator
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import mean_squared_error
+import random
+import sys
 
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import roc_auc_score
 
 bufferCaseNum = 1000000
 eta = 0.01
@@ -15,14 +15,17 @@ trainRounds = 10
 random.seed(10)
 initWeight = 0.05
 
+
 def nextInitWeight():
     return (random.random() - 0.5) * initWeight
+
 
 def ints(s):
     res = []
     for ss in s:
         res.append(int(ss))
     return res
+
 
 def sigmoid(p):
     return 1.0 / (1.0 + math.exp(-p))
@@ -31,7 +34,6 @@ def sigmoid(p):
 if len(sys.argv) < 3:
     print('Usage: train.yzx.txt test.yzx.txt')
     exit(-1)
-
 
 for round in range(0, trainRounds):
     # train for this round
@@ -45,7 +47,7 @@ for round in range(0, trainRounds):
             for data in trainData:
                 clk = data[0]
                 mp = data[1]
-                fsid = 2 # feature start id
+                fsid = 2  # feature start id
                 # predict
                 pred = 0.0
                 for i in range(fsid, len(data)):
@@ -64,7 +66,7 @@ for round in range(0, trainRounds):
     if len(trainData) > 0:
         for data in trainData:
             clk = data[0]
-            fsid = 2 # feature start id
+            fsid = 2  # feature start id
             # predict
             pred = 0.0
             for i in range(fsid, len(data)):
@@ -88,7 +90,7 @@ for round in range(0, trainRounds):
         data = ints(line.replace(":1", "").split())
         clk = data[0]
         mp = data[1]
-        fsid = 2 # feature start id
+        fsid = 2  # feature start id
         pred = 0.0
         for i in range(fsid, len(data)):
             feat = data[i]
@@ -109,7 +111,6 @@ for fv in featvalue:
     fo.write(str(fv[0]) + '\t' + str(fv[1]) + '\n')
 fo.close()
 
-
 # output the prediction
 fi = open(sys.argv[2], 'r')
 fo = open(sys.argv[2] + '.lr.pred', 'w')
@@ -122,9 +123,6 @@ for line in fi:
         if feat in featWeight:
             pred += featWeight[feat]
     pred = sigmoid(pred)
-    fo.write(str(pred) + '\n')    
+    fo.write(str(pred) + '\n')
 fo.close()
 fi.close()
-
-
-
