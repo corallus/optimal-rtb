@@ -39,7 +39,7 @@ def simulate_one_bidding_strategy_with_parameter(cases, ctrs, tcost, proportion,
         elif algo == "lin":
             bid = bidding_lin(pctr, original_ctr, para)
         else:
-            print 'wrong bidding strategy name'
+            print('wrong bidding strategy name')
             sys.exit(-1)
         bids += 1
         case = cases[idx]
@@ -56,12 +56,12 @@ def simulate_one_bidding_strategy(cases, ctrs, tcost, proportion, algo, writer):
     paras = algo_paras[algo]
     for para in paras:
         res = simulate_one_bidding_strategy_with_parameter(cases, ctrs, tcost, proportion, algo, para)
-        print res
+        print(res)
         writer.write(res + '\n')
 
 
 if len(sys.argv) < 5:
-    print 'Usage: python rtb-test.py train.yzx.txt test.yzx.txt test.yzx.txt.lr.pred rtb.result.txt'
+    print('Usage: python rtb-test.py train.yzx.txt test.yzx.txt test.yzx.txt.lr.pred rtb.result.txt')
     exit(-1)
 
 clicks_prices = []  # clk and price
@@ -120,7 +120,7 @@ fo = open(sys.argv[4], 'w')  # rtb.results.txt
 #header = "proportion\tclicks\tbids\timpressions\tbudget\tspend\tstrategy\tparameter"
 header = "prop\tclks\tbids\timps\tbudget\tspend\talgo\tpara"
 fo.write(header + "\n")
-print header
+print(header)
 for proportion in budget_proportions:
     for algo in algo_paras:
         simulate_one_bidding_strategy(clicks_prices, pctrs, total_cost, proportion, algo, fo)

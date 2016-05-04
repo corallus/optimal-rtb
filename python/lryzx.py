@@ -29,7 +29,7 @@ def sigmoid(p):
 
 
 if len(sys.argv) < 3:
-    print 'Usage: train.yzx.txt test.yzx.txt'
+    print('Usage: train.yzx.txt test.yzx.txt')
     exit(-1)
 
 
@@ -101,7 +101,7 @@ for round in range(0, trainRounds):
     fi.close()
     auc = roc_auc_score(y, yp)
     rmse = math.sqrt(mean_squared_error(y, yp))
-    print str(round) + '\t' + str(auc) + '\t' + str(rmse)
+    print(str(round) + '\t' + str(auc) + '\t' + str(rmse))
 
 # output the weights
 fo = open(sys.argv[1] + '.lr.weight', 'w')

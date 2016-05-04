@@ -26,7 +26,7 @@ def estimator_lr(feats):
 random.seed(10)
 
 if len(sys.argv) < 3:
-    print 'Usage: test.yzx.txt train.yzx.txt.lr.weight'
+    print('Usage: test.yzx.txt train.yzx.txt.lr.weight')
     exit(-1)
 
 y = []
@@ -57,6 +57,6 @@ fi.close()
 # evaluation
 auc = roc_auc_score(y, yp)
 rmse = math.sqrt(mean_squared_error(y, yp))
-print "algo\tauc\trmse"
-print "lr" + '\t' + str(auc) + '\t' + str(rmse)
+print("algo\tauc\trmse")
+print("lr" + '\t' + str(auc) + '\t' + str(rmse))
 

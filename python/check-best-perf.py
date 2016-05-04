@@ -4,7 +4,7 @@ import random
 
 
 if len(sys.argv) < 2:
-    print 'Usage: python check-best-perf.py rtb.result.1458.txt'
+    print('Usage: python check-best-perf.py rtb.result.1458.txt')
     exit(-1)
 
 setting_row = {}

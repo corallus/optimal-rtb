@@ -20,7 +20,7 @@ def win(ccfme, bid):
     return bid >= ccfme[2] and bid > ccfme[3]
 
 if len(sys.argv) < 6:
-    print 'Usage: train.log.txt test.log.txt test.lr.txt.pred test.gbrt.txt.pred rtb-result.txt'
+    print('Usage: train.log.txt test.log.txt test.lr.txt.pred test.gbrt.txt.pred rtb-result.txt')
     exit(-1)
 
 ccfm = [] # clk cnv floor market
@@ -112,7 +112,7 @@ def simulateABiddingStategyWithParameter(cases, tcost, proportion, algo, para):
             gbrtpctr = gbrtpctrs[idx]
             bid = lin(gbrtpctr, tctr, para)
         else:
-            print 'wrong algo'
+            print('wrong algo')
             sys.exit(-1)
         bids += 1
         case = cases[idx]
@@ -130,13 +130,13 @@ def simulateABiddingStrategy(cases, tcost, proportion, algo, writer):
     paras = algoParas[algo]
     for para in paras:
         res = simulateABiddingStategyWithParameter(cases, tcost, proportion, algo, para)
-        print res
+        print(res)
         writer.write(res + '\n')
 
 fo = open(sys.argv[5], 'w')
 header = "prop\tclk\tcnv\tbid\timp\tbudget\tspend\talgo\tpara"
 fo.write(header + "\n")
-print header
+print(header)
 for bp in budgetProportions:
     for algo in algoParas:
         simulateABiddingStrategy(ccfm, totalcost, bp, algo, fo)
