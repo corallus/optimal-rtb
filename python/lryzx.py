@@ -64,7 +64,6 @@ for round in range(0, trainRounds):
     if len(trainData) > 0:
         for data in trainData:
             clk = data[0]
-            mp = data[1]
             fsid = 2 # feature start id
             # predict
             pred = 0.0
@@ -105,7 +104,7 @@ for round in range(0, trainRounds):
 
 # output the weights
 fo = open(sys.argv[1] + '.lr.weight', 'w')
-featvalue = sorted(featWeight.iteritems(), key=operator.itemgetter(0))
+featvalue = sorted(featWeight.items(), key=operator.itemgetter(0))
 for fv in featvalue:
     fo.write(str(fv[0]) + '\t' + str(fv[1]) + '\n')
 fo.close()
