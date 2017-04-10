@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import math
 import operator
 import random
@@ -35,6 +34,7 @@ if len(sys.argv) < 3:
     print('Usage: train.yzx.txt test.yzx.txt')
     exit(-1)
 
+print('round' + '\t' + 'auc' + '\t' + 'rmse')
 for round in range(0, trainRounds):
     # train for this round
     fi = open(sys.argv[1], 'r')

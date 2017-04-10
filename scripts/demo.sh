@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 campaigns="1458"
 folder=../../make-ipinyou-data
 resultsfolder=../results
