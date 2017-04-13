@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 campaigns="1458"
-folder=../../make-ipinyou-data
+folder=/data/vincent/make-ipinyou-data
 resultsfolder=../results
 
 if [ ! -d $resultsfolder ]; then
