@@ -1,4 +1,7 @@
 from settings import *
+import scipy.stats
+import scipy.integrate
+import numpy as np
 
 
 class Campaign(object):
@@ -6,7 +9,8 @@ class Campaign(object):
     def __init__(self, name, train_data, test_data, pctr_data):
         self.original_ecpc = 0.  # original eCPC from train data
         self.original_ctr = 0.  # original ctr from train data
-        self.clicks_prices = []  # clk and price
+        self.test_clicks_prices = []  # clk and price
+        self.train_clicks_prices = []  # clk and price
         self.pctrs = []  # pCTR from logistic regression prediction
         self.total_cost = 0  # total original cost during the test data
         self.read_train_data(train_data)
@@ -24,11 +28,12 @@ class Campaign(object):
             if first:
                 first = False
                 continue
-            click = int(s[0])  # y
-            cost = int(s[1])  # z
+            click = int(s[0])
+            cost = int(s[1])
             imp_num += 1
             self.original_ctr += click
             self.original_ecpc += cost
+            self.train_clicks_prices.append((click, cost))
         fi.close()
         self.original_ecpc /= self.original_ctr
         self.original_ctr /= imp_num
@@ -40,7 +45,7 @@ class Campaign(object):
             s = line.split(' ')
             click = int(s[0])
             winning_price = int(s[1])
-            self.clicks_prices.append((click, winning_price))
+            self.test_clicks_prices.append((click, winning_price))
             self.total_cost += winning_price
         fi.close()
 
@@ -159,10 +164,12 @@ class CPCComputedBiddingStrategy(CPCBiddingStrategy):
         cpcs.sort()
 
         costs = 0
+        prev_cpc = 0
         for cpc, cost in cpcs:
             costs += cost
             if costs > self.budget:
-                return cpc
+                return prev_cpc
+            prev_cpc = cpc
         return 1000000
 
 
@@ -174,3 +181,79 @@ class CPCAggresivenessBiddingStrategy(CPCComputedBiddingStrategy, CPCFixedBiddin
         aggressive_ecpc = CPCComputedBiddingStrategy.get_targetcpc(self)
         difference = aggressive_ecpc - lin_ecpc
         return lin_ecpc + difference * self.para
+
+
+class CPCBid(CPCBiddingStrategy):
+    name = 'experiment'
+
+    def get_targetcpc(self):
+
+        impression_log = self.campaign.train_clicks_prices
+        n_impression_log = len(impression_log)
+
+        click_log = [c[1] for c in impression_log if c[0]]
+        n_click_log = len(click_log)
+
+        n_test_click = n_click_log/2  # train/test split
+
+        ctr_train = int(n_impression_log / n_click_log)
+
+        # price distribution for clicks
+        KDEpdf = scipy.stats.gaussian_kde(click_log)
+
+        cost_of_clicks = scipy.integrate.quad(lambda x: x*n_test_click * KDEpdf(x)[0], 0, np.inf)
+        # print(cost_of_clicks[0])
+
+        expected_costs = cost_of_clicks[0] * ctr_train
+        # print(expected_costs)
+
+        target_cpc = 0
+        costs = 0
+
+        if expected_costs > self.budget and True:
+            while costs < self.budget:
+                result = scipy.integrate.quad(lambda x: ctr_train * x * n_test_click * KDEpdf(x)[0], 0, target_cpc)
+                costs = result[0]
+                target_cpc += 1
+        else:
+            print('Can not spend all budget like this')
+
+        return int(costs/target_cpc)
+
+
+class CPCPerfectBid(CPCBiddingStrategy):
+    name = 'perfect'
+
+    def get_targetcpc(self):
+
+        impression_log = self.campaign.clicks_prices
+        n_impression_log = len(impression_log)
+
+        click_log = [c[1] for c in impression_log if c[0]]
+        n_click_log = len(click_log)
+
+        n_test_click = n_click_log  # train/test split
+
+        ctr_train = int(n_impression_log / n_click_log)
+
+        # price distribution for clicks
+        KDEpdf = scipy.stats.gaussian_kde(click_log)
+
+        cost_of_clicks = scipy.integrate.quad(lambda x: x*n_test_click * KDEpdf(x)[0], 0, np.inf)
+        # print(cost_of_clicks[0])
+
+        expected_costs = cost_of_clicks[0] * ctr_train
+        # print(expected_costs)
+
+        target_cpc = 0
+        costs = 0
+
+        if expected_costs > self.budget and True:
+            while costs < self.budget:
+                result = scipy.integrate.quad(lambda x: ctr_train * x * n_test_click * KDEpdf(x)[0], 0, target_cpc)
+                costs = result[0]
+                target_cpc += 1
+        else:
+            print('Can not spend all budget like this')
+
+        return int(costs/target_cpc)
