@@ -1,6 +1,6 @@
 from settings import *
 
-sub_results = ['analysis']
+sub_results = ['analysis', 'cpcbid']
 
 all_results = os.path.join(results_dir, "all")
 if not os.path.exists(all_results):

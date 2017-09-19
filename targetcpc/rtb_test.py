@@ -1,6 +1,5 @@
 from strategies import *
 
-# results = os.path.join(results_dir, "analysis")
 results = os.path.join(results_dir, "analysis")
 if not os.path.exists(results):
     os.makedirs(results)

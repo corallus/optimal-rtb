@@ -2,7 +2,6 @@ from __future__ import division
 import matplotlib.pyplot as plt
 
 from settings import *
-from strategies import Campaign
 
 output_dir = os.path.join(figures_dir, 'analysis')
 
@@ -103,20 +102,26 @@ class PlotBudgetSpend(Plot):
             list.append(100*costs/budget)
         return list
 
-algos = ['lin', 'mcpc', 'cpc lin', 'aggressive']
+algos = ['lin', 'mcpc', 'cpc lin', 'aggressive', 'experiment', 'perfect']
 
+# Analysis: Budget proportion vs Total clicks
 Plot(campaigns, algos, "Clicks", 1, 'clicks.png')
 
 Plot(campaigns, algos, "Costs", 5, 'costs.png')
 
+# Analysis: Budget proportion vs eCPC
 PlotECPC(campaigns, algos, "eCPC", 5, 'ecpc.png')
+
 for c in campaigns:
     PlotECPC([c], algos, "eCPC %s" % c, 5, 'ecpc_%s.png' % c)
 
+"""
 PlotPerformance(campaigns, algos, "ecpc + ecpc * abs(costs - budget) / budget", 5, 'performance.png')
 for c in campaigns:
     PlotPerformance([c], algos, "%s" % c, 5, 'performance_%s.png' % c)
+"""
 
+# Analysis: Budget proportion vs % of budget spent
 PlotBudgetSpend(campaigns, algos, "Budget spent", 5, 'budget_spent.png')
 
 """
